@@ -1,0 +1,10 @@
+@import 'purecss/build/pure.css';
+
+.canvas {
+    position: absolute;
+    z-index: 999;
+}
+
+.image {
+    position: absolute;
+}
