@@ -1,3 +1,5 @@
+import { FACEMESH_LIPS } from "@mediapipe/face_mesh"
+
 // Lower outer.
 const lowerLipsOuter = [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
 // Upper outer(excluding corners).
@@ -32,17 +34,29 @@ const upperLips = [
 export const drawMouth = (ctx, predictions) => {
   for (let f = 0; f < predictions.length; f++) {
     const keypoints = predictions[f].keypoints;
-
+    drawMouthCountour(ctx, keypoints);
     drawMouthPoints(ctx, keypoints);
   }
 };
 
 const drawMouthPoints = (ctx, keypoints) => {
-  const lips = [...lowerLips, ...upperLips].map((i) => keypoints[i]);
+  const lips = [...FACEMESH_LIPS].map((i) => keypoints[i[0]]);
   for (let i = 0; i < lips.length; i++) {
     ctx.beginPath();
-    ctx.arc(lips[i].x, lips[i].y, 1 /* radius */, 0, 2 * Math.PI);
-    ctx.fillStyle = "aqua";
+    ctx.arc(lips[i].x, lips[i].y, 1.5 /* radius */, 0, 2 * Math.PI);
+    ctx.fillStyle = "blue";
     ctx.fill();
   }
 };
+
+const drawMouthCountour = (ctx, keypoints) => {
+  ctx.lineWidth = 1;
+  FACEMESH_LIPS.forEach((p, i) => {
+    const start = keypoints[p[0]];
+    const end = keypoints[p[1]];
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(end.x, end.y);
+    ctx.strokeStyle = "cyan";
+    ctx.stroke();
+  });
+}
